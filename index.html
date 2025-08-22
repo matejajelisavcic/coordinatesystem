@@ -18,8 +18,9 @@
   <div id="container">
     <canvas id="coordCanvas" width="500" height="500"></canvas>
     <div id="coords"></div>
-    <button id="checkBtn">Check</button>
-    <div id="result"></div>
+  <button id="checkBtn">Check</button>
+  <button id="againBtn" style="display:none; margin-left:10px;">Again</button>
+  <div id="result"></div>
   </div>
   <script>
     const canvas = document.getElementById('coordCanvas');
@@ -31,15 +32,20 @@
     const origin = { x: size / 2, y: size / 2 };
 
     // Random target point
-    const target = {
-      x: Math.floor(Math.random() * 21) - 10,
-      y: Math.floor(Math.random() * 21) - 10
-    };
-    document.getElementById('coords').textContent = `Target: (${target.x}, ${target.y})`;
+    let target, dragPoint, dragging = false;
 
-    // Draggable point
-    let dragPoint = { x: 0, y: 0 };
-    let dragging = false;
+    function resetGame() {
+      target = {
+        x: Math.floor(Math.random() * 21) - 10,
+        y: Math.floor(Math.random() * 21) - 10
+      };
+      document.getElementById('coords').textContent = `Target: (${target.x}, ${target.y})`;
+      dragPoint = { x: 0, y: 0 };
+      document.getElementById('result').textContent = '';
+      document.getElementById('againBtn').style.display = 'none';
+      redraw();
+    }
+    resetGame();
 
     function toCanvasCoords(x, y) {
       return {
@@ -146,11 +152,13 @@
       if (dragPoint.x === target.x && dragPoint.y === target.y) {
         document.getElementById('result').textContent = 'Correct! 🎉';
         document.getElementById('result').style.color = 'green';
+        document.getElementById('againBtn').style.display = 'inline-block';
       } else {
         document.getElementById('result').textContent = `Try again! You are at (${dragPoint.x}, ${dragPoint.y})`;
         document.getElementById('result').style.color = 'red';
       }
     });
+    document.getElementById('againBtn').addEventListener('click', resetGame);
 
     redraw();
   </script>
